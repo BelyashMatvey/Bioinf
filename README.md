@@ -7,7 +7,7 @@
 ## Оглавление
 - [Основные функции](#main-functions)
 - [Используемые данные](#data)
-- [Authors](#authors)
+- [Авторы](#authors)
 
 <a name="main-functions"><h2>Основные функции</h2></a>
 ### filter_fastq

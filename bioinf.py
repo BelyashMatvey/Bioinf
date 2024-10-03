@@ -18,7 +18,8 @@ def filter_fastq(seqs: Dict[str, tuple[str, str]], gc_bounds: Union[int, tuple[i
         seqs - словарь, состоящий из fastq-сиквенсов. Структура следующая. Ключ - строка, имя последовательности.
         Значение - кортеж из двух строк: последовательность и качество.
     gc_bounds: int или tuple[int,int]
-        gc_bounds - интервал GC состава (в процентах). Если в аргумент передать одно число, то считается, что это верхняя граница.
+        gc_bounds - интервал GC состава (в процентах).
+        Если в аргумент передать одно число, то считается, что это верхняя граница.
     length_bounds: int или tuple[int,int]
         Интервал длины для фильтрации. Если в аргумент передать одно число, то считается, что это верхняя граница.
     quality_threshold: int
@@ -30,19 +31,19 @@ def filter_fastq(seqs: Dict[str, tuple[str, str]], gc_bounds: Union[int, tuple[i
         gc_bounds = (0, 100)
     if quality_threshold is None:
         quality_threshold = 0
-    result_seqs: Dict[str, tuple[str, str]] = {}  # словарь с итоговыми значениями
+    result_seqs: Dict[str, tuple[str, str]] = {}
     for name, fastq in seqs.items():
         if isinstance(gc_bounds, int):
             gc_bounds = (0, gc_bounds)
         if isinstance(length_bounds, int):
             length_bounds = (0, length_bounds)
-        gc_content: float = (fastq[0].count('G') + fastq[0].count('C')) / len(fastq[0]) * 100  # подсчет GC-контента
-        threshold: int = 0  # подсчет среднего качества прочтения
+        gc_content: float = (fastq[0].count('G') + fastq[0].count('C')) / len(fastq[0]) * 100
+        threshold: int = 0
         for char in fastq[1]:
             threshold += ord(char) - 33
         threshold /= len(fastq[0])
         if length_bounds[0] <= len(fastq[0]) <= length_bounds[1] and gc_bounds[0] <= gc_content <= gc_bounds[1] \
-                and threshold >= quality_threshold:  # проверка на удовлетворение критериям
+                and threshold >= quality_threshold:
             result_seqs[name] = fastq
 
     return result_seqs
@@ -52,8 +53,8 @@ def run_dna_rna_tools(*args: str) -> Union[str, List[str]]:
     """
     Функция run_dna_rna_tools
     Применение - На вход функции подается несколько строковых значений, последнее из которых - тип применяемой операции к последовательностям.
-    Дання функция возвращает результат применяемой операции к последовательности, если её возможно совершить, в противном случае выводится:
-        1. error_string = 'Некорректный ввод: строка должна быть либо ДНК, либо РНК', если последовательность не принадлежит к ДНК или РНК
+    Данная функция возвращает результат применяемой операции к последовательности, если её возможно совершить, в противном случае выводится:
+        1. error_string = 'Некорректный ввод: строка должна быть либо ДНК, либо РНК', если последовательность не является ДНК или РНК
         2. error_string_rna = "Строка должна быть ДНК. Дана строка РНК", если операцию transcribe_dna_complement пытаются применить
         к РНК последовательности.
 
